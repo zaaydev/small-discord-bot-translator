@@ -26,7 +26,7 @@ const client = new Client({
   partials: [Partials.Channel],
 });
 
-const model = google('gemini-2.0-flash');
+const model = google('gemini-2.5-flash');
 
 function shouldTranslate(content) {
   if (!content) return false;
