@@ -26,7 +26,7 @@ const client = new Client({
   partials: [Partials.Channel],
 });
 
-const model = google('gemini-2.5-flash');
+const model = google('gemini-2.0-flash');
 
 function shouldTranslate(content) {
   if (!content) return false;
@@ -67,17 +67,18 @@ ${text}
 
 client.on('messageCreate', async (message) => {
   try {
-    // never translate bot/webhook messages
     if (message.author.bot || message.webhookId) return;
 
-    // only messages with enough content
     if (!shouldTranslate(message.content)) return;
+
+    // typing animation
+    await message.channel.sendTyping();
 
     const translated = await translateMessage(message.content);
     if (!translated) return;
 
     await message.reply({
-      content: `**Translation / Traduction**\n${translated}`,
+      content: `**${message.author.username}:** ${translated}`,
       allowedMentions: { repliedUser: false },
     });
   } catch (error) {
